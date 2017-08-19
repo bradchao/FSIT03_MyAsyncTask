@@ -40,12 +40,16 @@ public class MyService2 extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean isStart = intent.getBooleanExtra("start", false);
         boolean isPause = intent.getBooleanExtra("pause", false);
+        int seekto = intent.getIntExtra("seekto", -1);
 
         if (isStart && mp != null && !mp.isPlaying()){
             mp.start();
         }
         if (isPause && mp != null && mp.isPlaying()){
             mp.pause();
+        }
+        if (seekto >= 0 && mp != null){
+            mp.seekTo(seekto);
         }
 
         return super.onStartCommand(intent, flags, startId);

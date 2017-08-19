@@ -29,6 +29,27 @@ public class MainActivity extends AppCompatActivity {
         tv = (TextView)findViewById(R.id.tv);
         tv2 = (TextView)findViewById(R.id.tv2);
         seekBar = (SeekBar)findViewById(R.id.seekbar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (b){
+                    Intent it = new Intent(MainActivity.this, MyService2.class);
+                    it.putExtra("seekto", i);
+                    startService(it);
+
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         myReceiver = new MyReceiver();
         IntentFilter filter = new IntentFilter("brad");
