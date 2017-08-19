@@ -145,9 +145,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             int len = intent.getIntExtra("len", -1);
+            int now = intent.getIntExtra("now", -1);
             if (len >0){
                 seekBar.setMax(len);
-                Log.i("brad", "onReceive:" + len);
+            }
+            if (now>0){
+                seekBar.setProgress(now);
             }
 
         }

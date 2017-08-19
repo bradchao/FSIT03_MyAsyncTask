@@ -6,8 +6,12 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MyService2 extends Service {
     private MediaPlayer mp;
+    private Timer timer;
 
     public MyService2() {
         Log.i("brad", "MySrvice2()");
@@ -22,6 +26,8 @@ public class MyService2 extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        timer = new Timer();
+        timer.schedule(new MyTask(), 0, 200);
         mp = MediaPlayer.create(this, R.raw.try_everything);
 
         int len = mp.getDuration();
@@ -45,6 +51,18 @@ public class MyService2 extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    private class MyTask extends TimerTask {
+        @Override
+        public void run() {
+            if (mp != null && mp.isPlaying()){
+                int now = mp.getCurrentPosition();
+                Intent it = new Intent("brad");
+                it.putExtra("now", now);
+                sendBroadcast(it);
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -53,6 +71,11 @@ public class MyService2 extends Service {
             mp.release();
             //mp.reset();
             mp = null;
+        }
+        if (timer != null){
+            timer.cancel();
+            timer.purge();
+            timer = null;
         }
     }
 }
