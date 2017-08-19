@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
         tv = (TextView)findViewById(R.id.tv);
         tv2 = (TextView)findViewById(R.id.tv2);
 
-        Intent it = new Intent(this, MyService1.class);
-        myServiceConnection = new MyServiceConnection();
-        bindService(it,myServiceConnection, Context.BIND_AUTO_CREATE);
+//        Intent it = new Intent(this, MyService1.class);
+//        myServiceConnection = new MyServiceConnection();
+//        bindService(it,myServiceConnection, Context.BIND_AUTO_CREATE);
 
     }
     private class MyServiceConnection implements ServiceConnection {
@@ -53,6 +53,23 @@ public class MainActivity extends AppCompatActivity {
         if (myAsyncTask!=null && !myAsyncTask.isCancelled()){
             myAsyncTask.cancel(true);
         }
+    }
+    // play
+    public void test4(View view){
+        Intent it = new Intent(this, MyService2.class);
+        it.putExtra("start", true);
+        startService(it);
+    }
+    // pause
+    public void test5(View view){
+        Intent it = new Intent(this, MyService2.class);
+        it.putExtra("pause", true);
+        startService(it);
+    }
+    // stop
+    public void test6(View view){
+        Intent it = new Intent(this, MyService2.class);
+        stopService(it);
     }
 
     private class MyAsyncTask extends AsyncTask<String,Integer,String>{
