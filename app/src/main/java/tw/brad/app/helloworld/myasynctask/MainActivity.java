@@ -1,8 +1,10 @@
 package tw.brad.app.helloworld.myasynctask;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.IBinder;
@@ -10,12 +12,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private MyAsyncTask myAsyncTask;
     private TextView tv, tv2;
     private MyServiceConnection myServiceConnection;
+    private SeekBar seekBar;
+    private MyReceiver myReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +28,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tv = (TextView)findViewById(R.id.tv);
         tv2 = (TextView)findViewById(R.id.tv2);
+        seekBar = (SeekBar)findViewById(R.id.seekbar);
+
+        myReceiver = new MyReceiver();
+        IntentFilter filter = new IntentFilter("brad");
+        registerReceiver(myReceiver, filter);
+
 
 //        Intent it = new Intent(this, MyService1.class);
 //        myServiceConnection = new MyServiceConnection();
 //        bindService(it,myServiceConnection, Context.BIND_AUTO_CREATE);
 
     }
+
+    @Override
+    public void finish() {
+        unregisterReceiver(myReceiver);
+        super.finish();
+    }
+
     private class MyServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -120,6 +138,18 @@ public class MainActivity extends AppCompatActivity {
                 }catch (InterruptedException e){}
             }
             return result;
+        }
+    }
+
+    private class MyReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int len = intent.getIntExtra("len", -1);
+            if (len >0){
+                seekBar.setMax(len);
+                Log.i("brad", "onReceive:" + len);
+            }
+
         }
     }
 

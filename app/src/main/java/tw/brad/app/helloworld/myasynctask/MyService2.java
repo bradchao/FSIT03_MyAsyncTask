@@ -23,6 +23,11 @@ public class MyService2 extends Service {
     public void onCreate() {
         super.onCreate();
         mp = MediaPlayer.create(this, R.raw.try_everything);
+
+        int len = mp.getDuration();
+        Intent it = new Intent("brad");
+        it.putExtra("len", len);
+        sendBroadcast(it);
     }
 
     @Override
