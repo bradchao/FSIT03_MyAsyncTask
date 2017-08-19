@@ -1,6 +1,11 @@
 package tw.brad.app.helloworld.myasynctask;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +15,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     private MyAsyncTask myAsyncTask;
     private TextView tv, tv2;
+    private MyServiceConnection myServiceConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +23,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tv = (TextView)findViewById(R.id.tv);
         tv2 = (TextView)findViewById(R.id.tv2);
+
+        Intent it = new Intent(this, MyService1.class);
+        myServiceConnection = new MyServiceConnection();
+        bindService(it,myServiceConnection, Context.BIND_AUTO_CREATE);
+
     }
+    private class MyServiceConnection implements ServiceConnection {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    }
+
+
+
     public void test1(View view){
         myAsyncTask = new MyAsyncTask();
         myAsyncTask.execute("Brad", "III", "OK", "Game", "IOS");
