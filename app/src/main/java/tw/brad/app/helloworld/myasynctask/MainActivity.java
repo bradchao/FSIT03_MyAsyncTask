@@ -25,8 +25,13 @@ public class MainActivity extends AppCompatActivity {
     public void test2(View view){
         tv.setText("Lottery: " + (int)(Math.random()*49+1));
     }
+    public void test3(View view){
+        if (myAsyncTask!=null && !myAsyncTask.isCancelled()){
+            myAsyncTask.cancel(true);
+        }
+    }
 
-    private class MyAsyncTask extends AsyncTask<String,Integer,Void>{
+    private class MyAsyncTask extends AsyncTask<String,Integer,String>{
         int i;
         @Override
         protected void onPreExecute() {
@@ -35,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.i("brad", "onPostExecute");
+        protected void onPostExecute(String ret) {
+            super.onPostExecute(ret);
+            tv.setText(ret);
         }
 
         @Override
@@ -47,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onCancelled(Void aVoid) {
-            super.onCancelled(aVoid);
-            Log.i("brad", "onCancelled(Void aVoid)");
+        protected void onCancelled(String result) {
+            super.onCancelled(result);
+            tv.setText(result);
         }
 
         @Override
@@ -59,16 +64,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(String... names) {
+        protected String doInBackground(String... names) {
+            String result = "OK";
             for (String name : names){
                 i++;
                 Log.i("brad", name);
                 publishProgress(i, i*10, i*100);
+                if (isCancelled()){
+                    result = "NOT OK";
+                    break;
+                }
                 try {
                     Thread.sleep(1000);
                 }catch (InterruptedException e){}
             }
-            return null;
+            return result;
         }
     }
 
